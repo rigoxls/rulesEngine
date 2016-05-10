@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Rigo's custom styles
+   ========================================================================== */
+
+body
+{
+    background: #09192A;
+}
+
+.container .jumbotron
+{
+    margin-top: 15px;
+}
+
+div.home-page
+{
+    width: 70%;
+    margin: 0 auto;
+}
+
+footer
+{
+    color: #ffffff;
+}
+
+input.ng-invalid.ng-dirty,
+textarea.ng-invalid.ng-dirty /* this class only appears if field is invalid */
+{
+    border: 1px solid #AA2226 !important;
+}
+
+.red{
+    color: #770000 !important;
+}
+
+th{
+    cursor: pointer;
+}
+
