@@ -1,9 +1,9 @@
 var conf = require('../../../config/conf'),
-    restService = require('../services/restService');
+    ruleService = require('../services/ruleService');
 
 var Home = function()
 {
-    this.restService = new restService();
+    this.ruleService = new ruleService();
 
     //this method take the request and redirect it to properly method
     this.request = function(action, req, res, next)
@@ -40,7 +40,7 @@ Home.prototype.upsert = function(req, res, next)
 
     var data = req.query;
 
-    self.restService['upsert'](data, function(resData)
+    self.ruleService['upsert'](data, function(resData)
     {
         if(resData){
             self.JSONresponse(res, resData.textResponse, resData.data, data.user);
@@ -62,7 +62,7 @@ Home.prototype.list = function(req, res, next)
 
     var data = req.query;
 
-    self.restService['list'](data, function(resData)
+    self.ruleService['list'](data, function(resData)
     {
         if(resData){
             self.JSONresponse(res, resData.textResponse, resData.data, data.user);
@@ -72,5 +72,28 @@ Home.prototype.list = function(req, res, next)
         }
     })
 };
+
+Home.prototype.get = function(req, res, next)
+{
+    var self = this;
+
+    if(!req.params){
+        console.info('body is empty');
+        return false;
+    }
+
+    var data = req.params;
+
+    self.ruleService['get'](data, function(resData)
+    {
+        if(resData){
+            self.JSONresponse(res, resData.textResponse, resData.data, data.user);
+        }
+        else{
+            console.info('something went wrong getting rule per id');
+        }
+    })
+}
+
 
 module.exports = Home;

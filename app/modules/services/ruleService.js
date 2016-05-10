@@ -22,10 +22,18 @@ RestService.prototype.upsert = function(data, callback)
     });
 };
 
-RestService.prototype.getById = function(data, callback)
+RestService.prototype.get = function(data, callback)
 {
-};
-
+    var self = this;
+    self.ruleModel.getById(data, function(data){
+        if(data){
+            var textResponse = 'Rule gotten';
+            callback({data: data, textResponse: textResponse});
+        }else{
+            callback(null);
+        }
+    })
+}
 
 RestService.prototype.list = function(data, callback)
 {
