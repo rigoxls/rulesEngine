@@ -15,8 +15,11 @@ RuleModel.prototype.getById = function(data, callback)
     this.model.findOne(
         query,
         function(err, data){
-            if(err) return console.error(err);
-            callback(data);
+            if(err){
+                callback(err, data);
+            }else{
+                callback(null, data);
+            }
         }
     )
 };
@@ -29,8 +32,11 @@ RuleModel.prototype.list = function(data, callback)
         query,
         {_id: 1, name: 1},
         function(err, data){
-            if(err) return console.error(err);
-            callback(data);
+            if(err){
+                callback(err, data);
+            }else{
+                callback(null, data);
+            }
         }
     )
 };
@@ -45,8 +51,11 @@ RuleModel.prototype.insert = function(data, callback)
     var ruleObject = new modelRule(predefinedData);
 
     ruleObject.save(function(err, data){
-        if(err) return console.error(err);
-        callback(data);
+        if(err){
+            callback(err, data);
+        }else{
+            callback(null, data);
+        }
     });
 };
 
@@ -68,7 +77,11 @@ RuleModel.prototype.update = function(data, callback)
     },
     options,
     function(err, data){
-        callback(data);
+        if(err){
+            callback(err, data);
+        }else{
+            callback(null, data);
+        }
     })
 };
 
