@@ -14,16 +14,28 @@ RuleService.prototype.upsert = function(data, callback)
     var self = this;
     var upsert = (_.isEmpty(data.ruleId)) ? 'insert' : 'update';
 
-    self.ruleModel[upsert](data, function(err, data){
-        if(err){
-            callback({ data: err, errorResponse: "Something went wrong upserting rule"});
-        }
-        else if(data){
-            callback({ data: data, textResponse: "Rule Process executed Sucessfully"});
-        }else{
-            callback(null);
-        }
-    });
+    var ruleValidated = self.rulesetService.generate([data]);
+    console.info(ruleValidated);
+
+    //if not basic errors create rule
+    if(ruleValidated.errors.length == 0){
+        self.ruleModel[upsert](data, function(err, data){
+            if(err){
+                callback({ data: err, errorResponse: "Something went wrong upserting rule"});
+            }
+            else if(data){
+                callback({ data: data, textResponse: "Rule Process executed Sucessfully"});
+            }else{
+                callback(null);
+            }
+        });
+    }else{
+        var err = {
+            'errors' : ruleValidated.errors
+        };
+        callback({ data: err, errorResponse: "Something went wrong upserting rule"});
+    }
+
 };
 
 RuleService.prototype.get = function(data, callback)
@@ -84,7 +96,8 @@ RuleService.prototype.generateConditions = function(req)
             console.info("Something went wrong listing rules");
         }
         else{
-            req.app.locals.conditionalsObject = self.rulesetService.generate(data);
+            var rulesValidated = self.rulesetService.generate(data);
+            req.app.locals.conditionalsObject = rulesValidated.codedRules;
         }
     });
 };

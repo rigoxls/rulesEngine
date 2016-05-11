@@ -1,6 +1,8 @@
 var _ = require('lodash');
 
-var RulesetService = function(){};
+var RulesetService = function(){
+    this.errors = [];
+};
 
 RulesetService.prototype.generate = function(data)
 {
@@ -11,14 +13,22 @@ RulesetService.prototype.generate = function(data)
         codedRules.push(self.getResultByType(JSON.parse(data[i].condition)));
     }
 
-    return codedRules;
+    return {
+        'codedRules' : codedRules,
+        'errors'     : self.errors
+    }
 };
 
 RulesetService.prototype.getResultByType = function(condition)
 {
     var self = this;
     var result = '';
-    if(_.isEmpty(condition.type)) return false;
+    if(_.isEmpty(condition.type)){
+        self.errors.push({
+            'message' : 'condition.type not found, please check your JSON rule'
+        });
+        return false;
+    }
 
     var type = condition.type;
 
@@ -53,7 +63,10 @@ RulesetService.prototype.andOrType = function(data)
 {
     var self = this;
     var result = '';
-    if(_.isEmpty(data.inputs)) return false;
+    if(_.isEmpty(data.inputs)){
+        self.errors.push('and | or conditions dont have inputs, please check your JSON rule');
+        return false;
+    }
 
     var operator = (data.type == 'or') ? ' || ' : ' && ';
 
@@ -75,7 +88,10 @@ RulesetService.prototype.addMulType = function(data)
     var self = this;
     var result = '';
 
-    if(_.isEmpty(data.inputs)) return false;
+    if(_.isEmpty(data.inputs)){
+        self.errors.push('add | mul conditions dont have inputs, please check your JSON rule');
+        return false;
+    }
 
     var operator = (data.type == 'add') ? ' + ' : ' * ';
 
@@ -95,7 +111,10 @@ RulesetService.prototype.addMulType = function(data)
 RulesetService.prototype.subDivType = function(data)
 {
     var self = this;
-    if(_.isEmpty(data.a) || _.isEmpty(data.b)) return false;
+    if(_.isEmpty(data.a) || _.isEmpty(data.b)){
+        self.errors.push('sub | div conditions dont have defined a and b objects, please check your JSON rule');
+        return false;
+    }
 
     var operator = (data.type == 'sub') ? ' - ' : ' / ';
 
@@ -105,11 +124,19 @@ RulesetService.prototype.subDivType = function(data)
     return '(' + scriptA + ' / ' + scriptB + ')';
 };
 
-RulesetService.prototype.compareType = function(data) /* validar que compare solo tenga objectos constant o fact */
+RulesetService.prototype.compareType = function(data) /* not or | and operators */
 {
     var self = this;
     var result;
-    if(_.isEmpty(data.a) || _.isEmpty(data.b) || _.isEmpty(data.condition)) return false;
+    if(_.isEmpty(data.a) || _.isEmpty(data.b) || _.isEmpty(data.condition)){
+        self.errors.push('Compare condition doesnt have a,b or condition object, please check your JSON rule');
+        return false;
+    }
+
+    if(data.type == 'or' || data.type == 'and'){
+        self.errors.push('Compare condition shouldnt have nested OR | AND operators, please check your JSON rule');
+        return false;
+    }
 
     var scriptA = self.getResultByType(data.a);
     var scriptB = self.getResultByType(data.b);
@@ -133,7 +160,10 @@ RulesetService.prototype.compareType = function(data) /* validar que compare sol
 RulesetService.prototype.factType = function(data)
 {
     var self = this;
-    if(_.isEmpty(data.field)) return false;
+    if(_.isEmpty(data.field)){
+        self.errors.push('fact type condition doesnt have field "field", please check your JSON rule');
+        return false;
+    }
 
     return data.field;
 };
@@ -142,9 +172,12 @@ RulesetService.prototype.constantType = function(data)
 {
     var self = this;
 
-    if( !data.svalue && !data.value) return false;
+    if( !data.svalue && !data.value){
+        self.errors.push('Constant condition doesnt have svalue or value, please check your JSON rule');
+        return false;
+    }
 
-    return (_.isEmpty(data.svalue)) ? data.value : data.svalue; //cambiar a notacion ||
+    return (_.isEmpty(data.svalue)) ? data.value : data.svalue;
 };
 
 RulesetService.prototype.likeCondition = function(scriptA, scriptB, condition)
