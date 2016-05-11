@@ -4,12 +4,5 @@
     "mongoDB"  : {
         "name" : "smartsoft",
         "host" : "localhost"
-    },
-
-    "mongoLab" : {
-        "name" : "smartsoft",
-        "host" : "ds013232.mlab.com:13232",
-        "user" : "rigoxls",
-        "password" : "++--12.rigoxls."
     }
 }

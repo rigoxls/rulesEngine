@@ -7,11 +7,7 @@ var http = require('http'),
     socketIO = require('./config/socketIO');
 
 
-if(env == 'development'){
-    mongoose.connect('mongodb://' + conf.mongoDB.host + '/' + conf.mongoDB.name);
-}else{
-    mongoose.connect('mongodb://' + mLab.user + ':' + mLab.password + '@' + mLab.host + '/' + mLab.name);
-}
+mongoose.connect('mongodb://' + conf.mongoDB.host + '/' + conf.mongoDB.name);
 
 var app = new expressServer();
 var server = http.createServer(app.expressServer);
