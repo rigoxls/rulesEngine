@@ -5,14 +5,14 @@ var RulesetService = function(){};
 RulesetService.prototype.generate = function(data)
 {
     var self = this;
-    var result = '';
+    var codedRules = [];
 
     for(var i in data){
-        result += self.getResultByType(JSON.parse(data[i].condition));
+        codedRules.push(self.getResultByType(JSON.parse(data[i].condition)));
     }
 
-console.info(result);
-    return result;
+    console.info(codedRules);
+    return codedRules;
 };
 
 RulesetService.prototype.getResultByType = function(condition)
@@ -23,35 +23,62 @@ RulesetService.prototype.getResultByType = function(condition)
 
     var type = condition.type;
 
-    switch(type){
-        case 'or'       : result = self.orType(condition);
+    switch(type)
+    {
+        case 'or'       :
+        case 'and'      : result = self.andOrType(condition);
             break;
-        case 'and'      : result = self.andType(condition);
+
+        case 'sub'      :
+        case 'div'      : result = self.subDivType(condition);
             break;
-        case 'sub'      : result = self.subType(condition);
+
+        case 'add'      :
+        case 'mul'      : result = self.addMulType(condition);
             break;
-        case 'div'      : result = self.divType(condition);
-            break;
-        case 'add'      : result = self.addType(condition);
-            break;
-        case 'mul'      : result = self.mulType(condition);
-            break;
+
         case 'compare'  : result = self.compareType(condition);
             break;
+
         case 'constant' : result = self.constantType(condition);
             break;
+
         case 'fact'     : result = self.factType(condition);
             break;
+    };
+
+    return result;
+};
+
+RulesetService.prototype.andOrType = function(data)
+{
+    var self = this;
+    var result = '';
+    if(_.isEmpty(data.inputs)) return false;
+
+    var operator = (data.type == 'or') ? ' || ' : ' && ';
+
+    var inputs = data.inputs;
+    var iLength = data.inputs.length;
+
+    for(var i in inputs){
+        result += '(' + self.getResultByType(inputs[i]) + ')';
+        if(i < iLength-1){
+            result += operator;
+        }
     }
 
     return result;
 };
 
-RulesetService.prototype.orType = function(data)
+RulesetService.prototype.addMulType = function(data)
 {
     var self = this;
     var result = '';
+
     if(_.isEmpty(data.inputs)) return false;
+
+    var operator = (data.type == 'add') ? ' + ' : ' * ';
 
     var inputs = data.inputs;
     var iLength = data.inputs.length;
@@ -59,31 +86,24 @@ RulesetService.prototype.orType = function(data)
     for(var i in inputs){
         result += self.getResultByType(inputs[i]);
         if(i < iLength-1){
-            result += ' || ';
+            result += operator;
         }
     }
 
-    return ' (' + result + ') ';
+    return '(' + result + ')';
 };
 
-RulesetService.prototype.andType = function(data)
+RulesetService.prototype.subDivType = function(data)
 {
     var self = this;
-    var result = '';
+    if(_.isEmpty(data.a) || _.isEmpty(data.b)) return false;
 
-    if(_.isEmpty(data.inputs)) return false;
+    var operator = (data.type == 'sub') ? ' - ' : ' / ';
 
-    var inputs = data.inputs;
-    var iLength = data.inputs.length;
+    var scriptA = self.getResultByType(data.a);
+    var scriptB = self.getResultByType(data.b);
 
-    for(var i in inputs){
-        result += self.getResultByType(inputs[i]);
-        if(i < iLength-1){
-            result += ' && ';
-        }
-    }
-
-    return ' (' + result + ') ';
+    return '(' + scriptA + ' / ' + scriptB + ')';
 };
 
 RulesetService.prototype.compareType = function(data) /* validar que compare solo tenga objectos constant o fact */
@@ -95,7 +115,7 @@ RulesetService.prototype.compareType = function(data) /* validar que compare sol
     var scriptB = self.getResultByType(data.b);
 
     //validate case regex
-    return ' (' + scriptA + ' ' + data.condition + ' ' + scriptB + ') ';
+    return scriptA + ' ' + data.condition + ' ' + scriptB;
 };
 
 RulesetService.prototype.factType = function(data)
@@ -109,8 +129,6 @@ RulesetService.prototype.factType = function(data)
 RulesetService.prototype.constantType = function(data)
 {
     var self = this;
-    console.info(_.isEmpty(data.value) + '-' + data.value);
-    console.info(_.isEmpty(data.svalue) + '-' + data.svalue);
 
     if( !data.svalue && !data.value) return false;
 
