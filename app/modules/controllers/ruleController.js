@@ -25,7 +25,11 @@ var Home = function()
 
 Home.prototype.home = function(req, res, next)
 {
+    var self = this;
     var object = {};
+
+    self.ruleService['generateConditions']();
+
     res.render('home', object);
 };
 
@@ -58,7 +62,7 @@ Home.prototype.list = function(req, res, next)
     if(!req.query){
         console.info('body is empty');
         return false;
-    }
+    };
 
     var data = req.query;
 
@@ -70,7 +74,7 @@ Home.prototype.list = function(req, res, next)
         else{
             console.info('something went wrong : listing rules');
         }
-    })
+    });
 };
 
 Home.prototype.get = function(req, res, next)
@@ -80,7 +84,7 @@ Home.prototype.get = function(req, res, next)
     if(!req.params){
         console.info('body is empty');
         return false;
-    }
+    };
 
     var data = req.params;
 
@@ -92,7 +96,7 @@ Home.prototype.get = function(req, res, next)
         else{
             console.info('something went wrong getting rule per id');
         }
-    })
+    });
 }
 
 

@@ -27,10 +27,11 @@ RuleModel.prototype.getById = function(data, callback)
 RuleModel.prototype.list = function(data, callback)
 {
     var query = {};
+    var fields = (data.all) ? {} : {_id: 1, name: 1};
 
     this.model.find(
         query,
-        {_id: 1, name: 1},
+        fields,
         function(err, data){
             if(err){
                 callback(err, data);

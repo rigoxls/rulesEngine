@@ -1,12 +1,15 @@
-var RuleModel = require('../models/RuleModel'),
+var RuleModel      = require('../models/RuleModel'),
+    rulesetService = require('./rulesetService'),
+    _q = require("q"),
     _ = require('lodash');
 
-var RestService = function()
+var RuleService = function()
 {
     this.ruleModel = new RuleModel();
+    this.rulesetService = new rulesetService();
 };
 
-RestService.prototype.upsert = function(data, callback)
+RuleService.prototype.upsert = function(data, callback)
 {
     var self = this;
     var upsert = (_.isEmpty(data.ruleId)) ? 'insert' : 'update';
@@ -23,7 +26,7 @@ RestService.prototype.upsert = function(data, callback)
     });
 };
 
-RestService.prototype.get = function(data, callback)
+RuleService.prototype.get = function(data, callback)
 {
     var self = this;
     self.ruleModel.getById(data, function(err, data){
@@ -38,19 +41,52 @@ RestService.prototype.get = function(data, callback)
     })
 }
 
-RestService.prototype.list = function(data, callback)
+RuleService.prototype.listAll = function(data)
 {
     var self = this;
+    var deferred = _q.defer();
+
     self.ruleModel.list(data, function(err, data){
         if(err){
-            callback({ data: err, errorResponse: "Something went wrong listing rules"});
-        }
-        else if(data){
-            callback({ data: data, textResponse: "Rule listed Sucessfully"});
+            err.error = true;
+            deferred.resolve(err);
         }else{
-            callback(null);
+            deferred.resolve(data);
         }
-    })
+    });
+
+    return deferred.promise;
 };
 
-module.exports = RestService;
+RuleService.prototype.list = function(data, callback)
+{
+    var self = this;
+    data.all = false;
+
+    self.listAll(data).then(function(data){
+        if(data.error){
+            callback({ data: data, errorResponse: "Something went wrong listing rules"});
+        }
+        else{
+            callback({ data: data, textResponse: "Rule listed Sucessfully"});
+        }
+    });
+};
+
+RuleService.prototype.generateConditions = function()
+{
+    var self = this;
+    var data = {};
+    data.all = true;
+
+    self.listAll(data).then(function(data){
+        if(data.error){
+            console.info("Something went wrong listing rules");
+        }
+        else{
+            self.rulesetService.generate(data);
+        }
+    });
+};
+
+module.exports = RuleService;
