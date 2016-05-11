@@ -24,7 +24,7 @@ RuleSchema.schema.path('condition').validate(function (value) {
 
 //check if name has unless 10 chars as a name
 RuleSchema.schema.path('name').validate(function (value) {
-    return (value.length >= 10);
+    return (value.length >= 7);
 }, 'Name should have unless 10 characters');
 
 

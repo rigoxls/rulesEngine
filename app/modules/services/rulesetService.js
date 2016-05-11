@@ -109,13 +109,26 @@ RulesetService.prototype.subDivType = function(data)
 RulesetService.prototype.compareType = function(data) /* validar que compare solo tenga objectos constant o fact */
 {
     var self = this;
+    var result;
     if(_.isEmpty(data.a) || _.isEmpty(data.b) || _.isEmpty(data.condition)) return false;
 
     var scriptA = self.getResultByType(data.a);
     var scriptB = self.getResultByType(data.b);
 
-    //validate case regex
-    return scriptA + ' ' + data.condition + ' ' + scriptB;
+    switch(data.condition)
+    {
+        case 'like'   :
+        case '!like'  : result = self.likeCondition(scriptA, scriptB, data.condition);
+            break;
+
+        case 'regex'  :
+        case '!regex' : result = self.regexCondition(scriptA, scriptB, data.condition);
+            break;
+
+        default       : result = scriptA + ' ' + data.condition + ' ' + scriptB;
+    }
+
+    return result;
 };
 
 RulesetService.prototype.factType = function(data)
@@ -133,6 +146,23 @@ RulesetService.prototype.constantType = function(data)
     if( !data.svalue && !data.value) return false;
 
     return (_.isEmpty(data.svalue)) ? data.value : data.svalue; //cambiar a notacion ||
+};
+
+RulesetService.prototype.likeCondition = function(scriptA, scriptB, condition)
+{
+    var self = this;
+    var negative = (condition == 'like') ? '' : '!';
+
+    return '('+ negative + scriptA + '.match(/'+ scriptB +'/i) > -1)';
+};
+
+RulesetService.prototype.regexCondition = function(scriptA, scriptB, condition)
+{
+    var self = this;
+    var negative = (condition == 'regex') ? '' : '!';
+
+    //case of regex , second field need to be a regex constant
+    return '('+ negative + scriptA + '.match(/'+ scriptB +'/i) > -1)';
 };
 
 module.exports = RulesetService;
