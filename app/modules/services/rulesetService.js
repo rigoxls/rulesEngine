@@ -11,7 +11,6 @@ RulesetService.prototype.generate = function(data)
         codedRules.push(self.getResultByType(JSON.parse(data[i].condition)));
     }
 
-    console.info(codedRules);
     return codedRules;
 };
 

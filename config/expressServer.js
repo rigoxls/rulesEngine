@@ -12,6 +12,7 @@ var ExpressServer = function(config)
 
     this.expressServer = express();
     this.expressServer.locals.appUrl = conf.appUrl;
+    this.expressServer.locals.conditionalsObject = {};
 
     //The bodyParser object exposes various factories to create middlewares.
     //All middlewares will populate the req.body property with the parsed body,

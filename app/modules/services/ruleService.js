@@ -73,7 +73,7 @@ RuleService.prototype.list = function(data, callback)
     });
 };
 
-RuleService.prototype.generateConditions = function()
+RuleService.prototype.generateConditions = function(req)
 {
     var self = this;
     var data = {};
@@ -84,7 +84,7 @@ RuleService.prototype.generateConditions = function()
             console.info("Something went wrong listing rules");
         }
         else{
-            self.rulesetService.generate(data);
+            req.app.locals.conditionalsObject = self.rulesetService.generate(data);
         }
     });
 };

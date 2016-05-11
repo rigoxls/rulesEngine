@@ -24,6 +24,10 @@ var Routes = function(app){
         controllers['ruleController'].request('upsert', req, res, next);
     });
 
+    app.expressServer.get('/conditionals', function(req, res, next){
+        controllers['ruleController'].request('getConditionals', req, res, next);
+    });
+
 }
 
 module.exports = Routes;
