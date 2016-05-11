@@ -15,7 +15,6 @@ RuleService.prototype.upsert = function(data, callback)
     var upsert = (_.isEmpty(data.ruleId)) ? 'insert' : 'update';
 
     var ruleValidated = self.rulesetService.generate([data]);
-    console.info(ruleValidated);
 
     //if not basic errors create rule
     if(ruleValidated.errors.length == 0){
