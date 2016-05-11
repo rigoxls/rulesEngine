@@ -25,7 +25,7 @@
 
                     setTimeout(function(){
                         $(".alert-danger").addClass('hide');
-                    },5000)
+                    },10000)
                 }
             },
             dataType: 'json'

@@ -1,13 +1,12 @@
 var _ = require('lodash');
 
-var RulesetService = function(){
-    this.errors = [];
-};
+var RulesetService = function(){};
 
 RulesetService.prototype.generate = function(data)
 {
     var self = this;
     var codedRules = [];
+    this.errors = [];
 
     for(var i in data){
         codedRules.push(self.getResultByType(JSON.parse(data[i].condition)));
@@ -64,7 +63,9 @@ RulesetService.prototype.andOrType = function(data)
     var self = this;
     var result = '';
     if(_.isEmpty(data.inputs)){
-        self.errors.push('and | or conditions dont have inputs, please check your JSON rule');
+        self.errors.push({
+            'message' : 'and | or conditions don\'t have inputs, please check your JSON rule'
+        });
         return false;
     }
 
@@ -89,7 +90,9 @@ RulesetService.prototype.addMulType = function(data)
     var result = '';
 
     if(_.isEmpty(data.inputs)){
-        self.errors.push('add | mul conditions dont have inputs, please check your JSON rule');
+        self.errors.push({
+            'message' : 'add | mul conditions don\'t have inputs, please check your JSON rule'
+        });
         return false;
     }
 
@@ -112,7 +115,9 @@ RulesetService.prototype.subDivType = function(data)
 {
     var self = this;
     if(_.isEmpty(data.a) || _.isEmpty(data.b)){
-        self.errors.push('sub | div conditions dont have defined a and b objects, please check your JSON rule');
+        self.errors.push({
+            'message' : 'sub | div conditions don\'t have defined a and b objects, please check your JSON rule'
+        });
         return false;
     }
 
@@ -129,12 +134,18 @@ RulesetService.prototype.compareType = function(data) /* not or | and operators 
     var self = this;
     var result;
     if(_.isEmpty(data.a) || _.isEmpty(data.b) || _.isEmpty(data.condition)){
-        self.errors.push('Compare condition doesnt have a,b or condition object, please check your JSON rule');
+        self.errors.push({
+            'message' : 'Compare condition doesn\'t have a,b or condition object, please check your JSON rule'
+        });
         return false;
     }
 
-    if(data.type == 'or' || data.type == 'and'){
-        self.errors.push('Compare condition shouldnt have nested OR | AND operators, please check your JSON rule');
+    if(data.a.type == 'or' || data.a.type == 'and' ||
+        data.b.type == 'or' || data.b.type == 'and')
+    {
+        self.errors.push({
+            'message' : 'Compare condition shouldn\'t have nested OR | AND operators, please check your JSON rule'
+        });
         return false;
     }
 
@@ -161,7 +172,9 @@ RulesetService.prototype.factType = function(data)
 {
     var self = this;
     if(_.isEmpty(data.field)){
-        self.errors.push('fact type condition doesnt have field "field", please check your JSON rule');
+        self.errors.push({
+            'message' : 'fact type condition doesn\'t have field "field", please check your JSON rule'
+        });
         return false;
     }
 
@@ -173,7 +186,9 @@ RulesetService.prototype.constantType = function(data)
     var self = this;
 
     if( !data.svalue && !data.value){
-        self.errors.push('Constant condition doesnt have svalue or value, please check your JSON rule');
+        self.errors.push({
+            'message' : 'Constant condition doesn\'t have svalue or value, please check your JSON rule'
+        });
         return false;
     }
 
