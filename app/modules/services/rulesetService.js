@@ -11,36 +11,40 @@ RulesetService.prototype.generate = function(data)
         result += self.getResultByType(JSON.parse(data[i].condition));
     }
 
+console.info(result);
     return result;
 };
 
 RulesetService.prototype.getResultByType = function(condition)
 {
     var self = this;
+    var result = '';
     if(_.isEmpty(condition.type)) return false;
 
     var type = condition.type;
 
     switch(type){
-        case 'or'       : self.orType(condition);
+        case 'or'       : result = self.orType(condition);
             break;
-        case 'and'      : self.andType(condition);
+        case 'and'      : result = self.andType(condition);
             break;
-        case 'sub'      : self.subType(condition);
+        case 'sub'      : result = self.subType(condition);
             break;
-        case 'div'      : self.divType(condition);
+        case 'div'      : result = self.divType(condition);
             break;
-        case 'add'      : self.addType(condition);
+        case 'add'      : result = self.addType(condition);
             break;
-        case 'mul'      : self.mulType(condition);
+        case 'mul'      : result = self.mulType(condition);
             break;
-        case 'compare'  : self.compareType(condition);
+        case 'compare'  : result = self.compareType(condition);
             break;
-        case 'constant' : self.constantType(condition);
+        case 'constant' : result = self.constantType(condition);
             break;
-        case 'fact'     : self.factType(condition);
+        case 'fact'     : result = self.factType(condition);
             break;
     }
+
+    return result;
 };
 
 RulesetService.prototype.orType = function(data)
@@ -54,12 +58,12 @@ RulesetService.prototype.orType = function(data)
 
     for(var i in inputs){
         result += self.getResultByType(inputs[i]);
-        if(i < iLength){
+        if(i < iLength-1){
             result += ' || ';
         }
     }
 
-    return result;
+    return ' (' + result + ') ';
 };
 
 RulesetService.prototype.andType = function(data)
@@ -74,12 +78,12 @@ RulesetService.prototype.andType = function(data)
 
     for(var i in inputs){
         result += self.getResultByType(inputs[i]);
-        if(i < iLength){
+        if(i < iLength-1){
             result += ' && ';
         }
     }
 
-    return result;
+    return ' (' + result + ') ';
 };
 
 RulesetService.prototype.compareType = function(data) /* validar que compare solo tenga objectos constant o fact */
@@ -91,7 +95,7 @@ RulesetService.prototype.compareType = function(data) /* validar que compare sol
     var scriptB = self.getResultByType(data.b);
 
     //validate case regex
-    return scriptA + ' ' + data.condition + ' ' + scriptB;
+    return ' (' + scriptA + ' ' + data.condition + ' ' + scriptB + ') ';
 };
 
 RulesetService.prototype.factType = function(data)
@@ -105,15 +109,14 @@ RulesetService.prototype.factType = function(data)
 RulesetService.prototype.constantType = function(data)
 {
     var self = this;
-    if(_.isEmpty(data.svalue) && _.isEmpty(data.value)) return false;
+    console.info(_.isEmpty(data.value) + '-' + data.value);
+    console.info(_.isEmpty(data.svalue) + '-' + data.svalue);
 
-    return (data.value) ? data.value : data.svalue; //cambiar a notacion ||
+    if( !data.svalue && !data.value) return false;
+
+    return (_.isEmpty(data.svalue)) ? data.value : data.svalue; //cambiar a notacion ||
 };
 
 module.exports = RulesetService;
 
 
-//fact, and, or, div, sub, mul, add, compare, constant
-
-//run all rules
-//
