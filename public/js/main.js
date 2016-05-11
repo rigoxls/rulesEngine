@@ -1,6 +1,11 @@
 (function(w){
     'use strict';
 
+    var socket = io();
+    socket.on('validateResponse', function(msg){
+        console.info(msg);
+    });
+
     $("#upsertButton").click(function()
     {
         var data = {
@@ -25,11 +30,24 @@
 
                     setTimeout(function(){
                         $(".alert-danger").addClass('hide');
-                    },10000)
+                    },10000);
+
+                    return false;
                 }
+
+                $("#name").val('');
+                $("#ruleId").val('');
+                $("#condition").val('');
+
             },
             dataType: 'json'
         });
-
     });
+
+    $("#validateFacts").click(function()
+    {
+        var fact = $("#fact").val();
+        socket.emit('validateFacts', fact);
+    });
+
 })(window);

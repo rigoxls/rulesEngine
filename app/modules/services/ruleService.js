@@ -17,7 +17,8 @@ RuleService.prototype.upsert = function(data, callback)
     var ruleValidated = self.rulesetService.generate([data]);
 
     //if not basic errors create rule
-    if(ruleValidated.errors.length == 0){
+    if(ruleValidated.errors.length == 0)
+    {
         self.ruleModel[upsert](data, function(err, data){
             if(err){
                 callback({ data: err, errorResponse: "Something went wrong upserting rule"});
@@ -28,7 +29,8 @@ RuleService.prototype.upsert = function(data, callback)
                 callback(null);
             }
         });
-    }else{
+    }else
+    {
         var err = {
             'errors' : ruleValidated.errors
         };

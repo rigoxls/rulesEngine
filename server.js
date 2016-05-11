@@ -3,7 +3,8 @@ var http = require('http'),
     mLab = conf.mongoLab,
     mongoose = require('mongoose'),
     expressServer = require('./config/expressServer'),
-    env = process.env.NODE_ENV || 'production';
+    env = process.env.NODE_ENV || 'production',
+    socketIO = require('./config/socketIO');
 
 
 if(env == 'development'){
@@ -14,9 +15,9 @@ if(env == 'development'){
 
 var app = new expressServer();
 var server = http.createServer(app.expressServer);
-
+var Io = new socketIO({server: server});
 
 //init routes
-require('./routes.js')(app);
+require('./routes.js')(app, Io);
 
 server.listen(process.env.PORT || conf.port);

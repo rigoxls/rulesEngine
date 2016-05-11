@@ -28,7 +28,6 @@ Rule.prototype.home = function(req, res, next)
     var object = {};
 
     self.ruleService['generateConditions'](req);
-
     res.render('home', object);
 };
 
@@ -47,6 +46,8 @@ Rule.prototype.upsert = function(req, res, next)
     {
         if(resData){
             self.JSONresponse(res, resData.textResponse, resData.data);
+            //we regenerate all rules
+            self.ruleService['generateConditions'](req);
         }
         else{
             console.info('something went wrong : upsert method rule');
