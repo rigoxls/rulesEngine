@@ -15,7 +15,7 @@ var RuleModel = function(conf){
 RuleModel.prototype.getById = function(data, callback)
 {
     var query = {
-        _id: data.ruleId
+        ruleId: data.ruleId
     };
 
     this.model.findOne(

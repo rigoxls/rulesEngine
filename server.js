@@ -8,6 +8,7 @@ var http = require('http'),
 
 
 mongoose.connect('mongodb://' + conf.mongoDB.host + '/' + conf.mongoDB.name);
+//mongoose.connect('mongodb://' + conf.mongoDB.user + ':' + conf.mongoDB.pass + '@' + conf.mongoDB.host + '/' + conf.mongoDB.name);
 
 var app = new expressServer();
 var server = http.createServer(app.expressServer);
