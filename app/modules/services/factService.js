@@ -19,6 +19,10 @@ FactService.prototype.validateFacts = function(factObject)
 
     factObject = self.transformObject(factObject);
 
+    if(factObject.error){
+        return factObject.error;
+    }
+
     //creating local values
     for(var i in conditions){
         try {
@@ -37,10 +41,10 @@ FactService.prototype.validateFacts = function(factObject)
 FactService.prototype.transformObject = function(factObject)
 {
     try {
-        factObject = JSON.parse(factObject);
+        factObject = eval("(" + factObject + ')');
     }catch (e)
     {
-       factObject = eval("(" + factObject + ')');
+        return { 'error' : 'Not valid JSON' };
     }
 
     return factObject;
