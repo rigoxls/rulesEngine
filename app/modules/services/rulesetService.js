@@ -192,7 +192,7 @@ RulesetService.prototype.constantType = function(data)
         return false;
     }
 
-    return (_.isEmpty(data.svalue)) ? data.value : data.svalue;
+    return (_.isEmpty(data.svalue)) ? '\'' + data.value + '\'' : '\'' + data.svalue + '\'';
 };
 
 RulesetService.prototype.likeCondition = function(scriptA, scriptB, condition)

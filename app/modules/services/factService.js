@@ -15,7 +15,7 @@ FactService.prototype.validateFacts = function(factObject)
     var app = self.app.expressServer;
     var conditions = app.locals.conditionalsObject;
 
-    factObject = eval("(" + factObject + ')');
+    factObject = self.transformObject(factObject);
 
     //creating local values
     for(var i in conditions){
@@ -26,12 +26,23 @@ FactService.prototype.validateFacts = function(factObject)
             }
         }catch (e)
         {
-           console.info('false rule');
+           console.info('Rule descarted !');
         }
     }
-
-    console.info(passedRules);
-
+    return passedRules;
 };
+
+FactService.prototype.transformObject = function(factObject)
+{
+    try {
+        factObject = JSON.parse(factObject);
+    }catch (e)
+    {
+       console.info('check input data for JSON');
+       factObject = eval("(" + factObject + ')');
+    }
+
+    return factObject;
+}
 
 module.exports = FactService;
