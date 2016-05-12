@@ -16,8 +16,8 @@ var SocketIO = function(config){
     {
           socket.on('validateFacts', function(factObject)
           {
-            self.factService.validateFacts(factObject);
-            io.emit('validateResponse', factObject);
+            var passedRules = self.factService.validateFacts(factObject);
+            io.emit('validateResponse', passedRules);
           });
     });
 

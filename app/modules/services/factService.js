@@ -4,15 +4,17 @@ var  ruleService = require('./ruleService'),
 
 var FactService = function(app)
 {
-    this.app = app;
+    this.app = app.expressServer;
     this.ruleService = new ruleService();
+    //we need to be sure rules were loaded
+    this.ruleService.generateConditions({app : this.app });
 };
 
 FactService.prototype.validateFacts = function(factObject)
 {
     var self = this;
     var passedRules = [];
-    var app = self.app.expressServer;
+    var app = self.app;
     var conditions = app.locals.conditionalsObject;
 
     factObject = self.transformObject(factObject);

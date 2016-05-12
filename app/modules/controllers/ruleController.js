@@ -27,7 +27,6 @@ Rule.prototype.home = function(req, res, next)
     var self = this;
     var object = {};
 
-    self.ruleService['generateConditions'](req);
     res.render('home', object);
 };
 
