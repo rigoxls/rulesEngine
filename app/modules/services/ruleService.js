@@ -99,6 +99,7 @@ RuleService.prototype.generateConditions = function(req)
         else{
             var rulesValidated = self.rulesetService.generate(data);
             req.app.locals.conditionalsObject = rulesValidated.codedRules;
+            //console.info(req.app.locals.conditionalsObject);
         }
     });
 };

@@ -3,7 +3,11 @@
 
     var socket = io();
     socket.on('validateResponse', function(msg){
-        console.info(msg);
+        $(".alert-info").removeClass('hide').find(".messages").html(msg.toString());
+
+        setTimeout(function(){
+            $(".alert-info").addClass('hide');
+        },10000);
     });
 
     $("#upsertButton").click(function()

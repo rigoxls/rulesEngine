@@ -5,18 +5,19 @@ var RulesetService = function(){};
 RulesetService.prototype.generate = function(data)
 {
     var self = this;
-    var codedRules = [];
+    var codedRules = {};
     this.errors = [];
 
     for(var i in data){
         try {
-            _.isObject(JSON.parse(data[i].condition));
+            var parsedCondition = JSON.parse(data[i].condition);
+            _.isObject(parsedCondition);
         }
         catch (e) {
           return {'errors' : [{'message' : 'Invalid JSON, please check your JSON rule'}]};
         }
 
-        codedRules.push(self.getResultByType(parsedCondition));
+        codedRules[data[i].ruleId] = self.getResultByType(parsedCondition);
     }
 
     return {
@@ -185,7 +186,7 @@ RulesetService.prototype.factType = function(data)
         return false;
     }
 
-    return data.field;
+    return 'factObject.' + data.field;
 };
 
 RulesetService.prototype.constantType = function(data)

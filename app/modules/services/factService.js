@@ -24,7 +24,7 @@ FactService.prototype.validateFacts = function(factObject)
         try {
             var ruleResult = eval(conditions[i]);
             if(ruleResult){
-                passedRules.push(conditions[i]);
+                passedRules.push(i);
             }
         }catch (e)
         {
@@ -40,7 +40,6 @@ FactService.prototype.transformObject = function(factObject)
         factObject = JSON.parse(factObject);
     }catch (e)
     {
-       console.info('check input data for JSON');
        factObject = eval("(" + factObject + ')');
     }
 

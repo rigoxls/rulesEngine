@@ -29,7 +29,7 @@ RuleModel.prototype.getById = function(data, callback)
 RuleModel.prototype.list = function(data, callback)
 {
     var query = {};
-    var fields = (data.all) ? {} : {_id: 1, name: 1};
+    var fields = (data.all) ? {} : {ruleId: 1, name: 1, _id: 0};
 
     this.model.find(
         query,
