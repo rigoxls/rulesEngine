@@ -11,7 +11,7 @@ mongoose.connect('mongodb://' + conf.mongoDB.host + '/' + conf.mongoDB.name);
 
 var app = new expressServer();
 var server = http.createServer(app.expressServer);
-var Io = new socketIO({server: server});
+var Io = new socketIO({server: server, app: app});
 
 //init routes
 require('./routes.js')(app, Io);
