@@ -30,6 +30,8 @@ Rule.prototype.home = function(req, res, next)
     res.render('home', object);
 };
 
+//This method handles request for
+//creation or update rules
 Rule.prototype.upsert = function(req, res, next)
 {
     var self = this;
@@ -54,6 +56,7 @@ Rule.prototype.upsert = function(req, res, next)
     })
 };
 
+//Method to list rules
 Rule.prototype.list = function(req, res, next)
 {
     var self = this;
@@ -76,6 +79,7 @@ Rule.prototype.list = function(req, res, next)
     });
 };
 
+//Method to get specific rule
 Rule.prototype.get = function(req, res, next)
 {
     var self = this;
@@ -98,6 +102,7 @@ Rule.prototype.get = function(req, res, next)
     });
 }
 
+//Method to list current conditionals generated
 Rule.prototype.getConditionals = function(req, res, next)
 {
     var self = this;

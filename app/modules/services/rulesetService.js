@@ -2,6 +2,10 @@ var _ = require('lodash');
 
 var RulesetService = function(){};
 
+
+//Method to generate and validate conditions
+//@data object
+//return object
 RulesetService.prototype.generate = function(data)
 {
     var self = this;
@@ -26,6 +30,9 @@ RulesetService.prototype.generate = function(data)
     }
 };
 
+//Method to check every object inside a json
+//define and determine every type of object on DSL
+// return condition String
 RulesetService.prototype.getResultByType = function(condition)
 {
     var self = this;
@@ -66,6 +73,9 @@ RulesetService.prototype.getResultByType = function(condition)
     return result;
 };
 
+//and or || type
+//@data object
+//return string
 RulesetService.prototype.andOrType = function(data)
 {
     var self = this;
@@ -92,6 +102,9 @@ RulesetService.prototype.andOrType = function(data)
     return result;
 };
 
+//add or mul type
+//@data object
+//return string
 RulesetService.prototype.addMulType = function(data)
 {
     var self = this;
@@ -119,6 +132,9 @@ RulesetService.prototype.addMulType = function(data)
     return '(' + result + ')';
 };
 
+//sub or div type
+//@data object
+//return string
 RulesetService.prototype.subDivType = function(data)
 {
     var self = this;
@@ -137,6 +153,9 @@ RulesetService.prototype.subDivType = function(data)
     return '(' + scriptA + ' / ' + scriptB + ')';
 };
 
+//comparetype
+//@data object
+//return string
 RulesetService.prototype.compareType = function(data) /* not or | and operators */
 {
     var self = this;
@@ -176,6 +195,9 @@ RulesetService.prototype.compareType = function(data) /* not or | and operators 
     return result;
 };
 
+//fact type
+//@data object
+//return string
 RulesetService.prototype.factType = function(data)
 {
     var self = this;
@@ -189,6 +211,9 @@ RulesetService.prototype.factType = function(data)
     return 'factObject.' + data.field;
 };
 
+//constant type
+//@data object
+//return string
 RulesetService.prototype.constantType = function(data)
 {
     var self = this;
@@ -203,6 +228,9 @@ RulesetService.prototype.constantType = function(data)
     return (_.isEmpty(data.svalue)) ? '\'' + data.value + '\'' : '\'' + data.svalue + '\'';
 };
 
+//Special case for like type
+//@data object
+//return string
 RulesetService.prototype.likeCondition = function(scriptA, scriptB, condition)
 {
     var self = this;
@@ -211,6 +239,9 @@ RulesetService.prototype.likeCondition = function(scriptA, scriptB, condition)
     return '('+ negative + scriptA + '.match(/'+ scriptB +'/i) > -1)';
 };
 
+//Special case for regex type
+//@data object
+//return string
 RulesetService.prototype.regexCondition = function(scriptA, scriptB, condition)
 {
     var self = this;

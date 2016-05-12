@@ -10,6 +10,9 @@ var FactService = function(app)
     this.ruleService.generateConditions({app : this.app });
 };
 
+//Method to validate facts
+//@data object
+//return array (consequences)
 FactService.prototype.validateFacts = function(factObject)
 {
     var self = this;
@@ -38,6 +41,7 @@ FactService.prototype.validateFacts = function(factObject)
     return passedRules;
 };
 
+//transform json from view
 FactService.prototype.transformObject = function(factObject)
 {
     try {

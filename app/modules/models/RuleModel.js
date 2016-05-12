@@ -8,6 +8,10 @@ var RuleModel = function(conf){
     this.countersModel = new modelCounters();
 };
 
+//return rule by Id
+//@data object
+//@callback function
+//return object
 RuleModel.prototype.getById = function(data, callback)
 {
     var query = {
@@ -26,6 +30,10 @@ RuleModel.prototype.getById = function(data, callback)
     )
 };
 
+//return list of rules
+//@data object
+//@callback function
+//return object
 RuleModel.prototype.list = function(data, callback)
 {
     var query = {};
@@ -44,6 +52,10 @@ RuleModel.prototype.list = function(data, callback)
     );
 };
 
+//Insert rule
+//@data object
+//@callback function
+//return object
 RuleModel.prototype.insert = function(data, callback)
 {
     this.countersModel.getNextSequence(function(ruleId){
@@ -67,6 +79,10 @@ RuleModel.prototype.insert = function(data, callback)
 
 };
 
+//update rule
+//@data object
+//@callback function
+//return object
 RuleModel.prototype.update = function(data, callback)
 {
     var ruleId = data.ruleId;

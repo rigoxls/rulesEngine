@@ -9,6 +9,10 @@ var RuleService = function()
     this.rulesetService = new rulesetService();
 };
 
+//Method to create or update rule
+//@data object
+//@callback function
+//return object
 RuleService.prototype.upsert = function(data, callback)
 {
     var self = this;
@@ -39,6 +43,10 @@ RuleService.prototype.upsert = function(data, callback)
 
 };
 
+//Method to get rule
+//@data object
+//@callback function
+//return object
 RuleService.prototype.get = function(data, callback)
 {
     var self = this;
@@ -54,6 +62,10 @@ RuleService.prototype.get = function(data, callback)
     })
 }
 
+//Method to list rules, a promise
+//@data object
+//@callback function
+//return a Q promise
 RuleService.prototype.listAll = function(data)
 {
     var self = this;
@@ -86,6 +98,10 @@ RuleService.prototype.list = function(data, callback)
     });
 };
 
+//Method to generate rules
+//@data object
+//@callback function
+//return object
 RuleService.prototype.generateConditions = function(req)
 {
     var self = this;
