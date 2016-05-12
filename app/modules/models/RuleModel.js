@@ -1,9 +1,11 @@
 var modelRule = require('./schema/ruleSchema'),
+    modelCounters = require('./CountersModel'),
     mongoose = require('mongoose');
 
 var RuleModel = function(conf){
     conf = conf || {};
     this.model = modelRule;
+    this.countersModel = new modelCounters();
 };
 
 RuleModel.prototype.getById = function(data, callback)
@@ -39,25 +41,30 @@ RuleModel.prototype.list = function(data, callback)
                 callback(null, data);
             }
         }
-    )
+    );
 };
 
 RuleModel.prototype.insert = function(data, callback)
 {
-    var predefinedData = {
-        name        : data.name,
-        condition   : data.condition
-    };
+    this.countersModel.getNextSequence(function(ruleId){
 
-    var ruleObject = new modelRule(predefinedData);
+        var predefinedData = {
+                name        : data.name,
+                condition   : data.condition,
+                ruleId      : ruleId
+            };
 
-    ruleObject.save(function(err, data){
-        if(err){
-            callback(err, data);
-        }else{
-            callback(null, data);
-        }
+        var ruleObject = new modelRule(predefinedData);
+
+        ruleObject.save(function(err, data){
+            if(err){
+                callback(err, data);
+            }else{
+                callback(null, data);
+            }
+        });
     });
+
 };
 
 RuleModel.prototype.update = function(data, callback)
@@ -71,7 +78,7 @@ RuleModel.prototype.update = function(data, callback)
 
     this.model.update(
     {
-        _id: ruleId
+        ruleId: ruleId
     },
     {
         $set: settedValues

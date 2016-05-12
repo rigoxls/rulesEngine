@@ -35,6 +35,12 @@
                     return false;
                 }
 
+                $(".alert-success").removeClass('hide').find(".messages").html('Success !!!');
+
+                setTimeout(function(){
+                    $(".alert-success").addClass('hide');
+                },10000);
+
                 $("#name").val('');
                 $("#ruleId").val('');
                 $("#condition").val('');

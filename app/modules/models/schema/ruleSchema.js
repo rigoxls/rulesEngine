@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
     _ = require('lodash');
 
 var RuleSchema = new Schema({
+    ruleId     : {type: Number, unique: true, required: true},
     name       : {type: String, required: true},
     condition  : {type: Schema.Types.Mixed, required: true},
     cretatedAt : {type: Date, default: Date.now},
@@ -25,7 +26,7 @@ RuleSchema.schema.path('condition').validate(function (value) {
 //check if name has unless 10 chars as a name
 RuleSchema.schema.path('name').validate(function (value) {
     return (value.length >= 7);
-}, 'Name should have unless 10 characters');
+}, 'Name should have unless 7 characters');
 
 
 module.exports = RuleSchema;
