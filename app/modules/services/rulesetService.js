@@ -9,7 +9,14 @@ RulesetService.prototype.generate = function(data)
     this.errors = [];
 
     for(var i in data){
-        codedRules.push(self.getResultByType(JSON.parse(data[i].condition)));
+        try {
+            _.isObject(JSON.parse(data[i].condition));
+        }
+        catch (e) {
+          return {'errors' : [{'message' : 'Invalid JSON, please check your JSON rule'}]};
+        }
+
+        codedRules.push(self.getResultByType(parsedCondition));
     }
 
     return {
